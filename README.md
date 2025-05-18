@@ -9,6 +9,7 @@ Detectar padrões de satisfação e insatisfação por marca e categoria;
 Relacionar percepção do cliente com preço e volume de avaliações.
 Entre outros.
 🔍 Como transformar dados soltos em inteligência para decisões de marketing?
+
 📌 1. Coleta de Dados
  Utilizei técnicas de web scraping com Selenium, Requests e BeautifulSoup para extrair informações de produtos voltados para cães no site da PetLovers — incluindo preços, avaliações, comentários e descrições.
 🧹 2. Processamento e Limpeza
