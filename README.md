@@ -1,129 +1,132 @@
-🐾 Projeto PetLovers – Data Pipeline e Análise Estratégica de E-commerce Pet
-📌 Descrição Geral
-Este projeto simula uma parceria com a PetLovers, um e-commerce fictício especializado em produtos para cães, com o objetivo de resolver um problema clássico de marketing digital:
+# 🐾 Projeto PetLovers – Data Pipeline e Análise Estratégica de E-commerce Pet  
 
-Como entender o que realmente influencia a percepção dos clientes sobre os produtos — preço, marca, categoria ou qualidade percebida?
+## 📌 Descrição Geral  
+Este projeto simula uma parceria com a **PetLovers**, um e-commerce fictício especializado em produtos para cães, com o objetivo de resolver um problema clássico de marketing digital:
 
-A solução foi construir um pipeline de dados completo, capaz de transformar dados soltos (comentários, avaliações e características dos produtos) em informações acionáveis que orientem a equipe de marketing na tomada de decisões.
+> **"Como entender o que realmente influencia a percepção dos clientes sobre os produtos — preço, marca, categoria ou qualidade percebida?"**
 
-🎯 Objetivos do Projeto
-Identificar produtos com maior potencial de destaque;
+A solução foi construir um **pipeline de dados completo**, capaz de transformar dados soltos (comentários, avaliações e características dos produtos) em **informações acionáveis** que orientem a equipe de marketing na tomada de decisões.
 
-Detectar pontos fortes e fracos em marcas e categorias;
+---
 
-Relacionar percepção dos clientes com preço, volume de comentários e avaliações;
+## 🎯 Objetivos do Projeto
+- Identificar **produtos com maior potencial de destaque**;
+- Detectar **pontos fortes e fracos** em marcas e categorias;
+- Relacionar percepção dos clientes com **preço, volume de comentários e avaliações**;
+- Criar uma solução analítica escalável e reaproveitável.
 
-Criar uma solução analítica escalável e reaproveitável.
+---
 
-⚙️ Arquitetura do Pipeline
-1. Coleta de Dados (Web Scraping)
-Tecnologias: Selenium, Requests, BeautifulSoup
+## ⚙️ Arquitetura do Pipeline
 
-Dados extraídos:
+### 1. Coleta de Dados (Web Scraping)
+- **Tecnologias**: `Selenium`, `Requests`, `BeautifulSoup`
+- **Dados extraídos**:
+  - Nome e descrição do produto
+  - Preço
+  - Categoria
+  - Marca
+  - Avaliação média
+  - Número de avaliações e comentários
+  - URL
 
-Nome e descrição do produto
+### 2. Processamento e Limpeza
+- **Tecnologia**: `PySpark`
+- **Tratamentos aplicados**:
+  - Padronização de textos
+  - Conversão de tipos
+  - Remoção de inconsistências
+  - Tratamento de nulos e duplicados
 
-Preço
-
-Categoria
-
-Marca
-
-Avaliação média
-
-Número de avaliações e comentários
-
-URL
-
-2. Processamento e Limpeza
-Tecnologia: PySpark (processamento distribuído)
-
-Etapas:
-
-Padronização de textos
-
-Conversão de tipos
-
-Remoção de inconsistências
-
-Tratamento de nulos e duplicados
-
-3. Feature Engineering
+### 3. Feature Engineering
 Variáveis derivadas criadas para enriquecer a análise:
+- `avaliacao_ponderada`
+- `escore_engajamento = log1p(avaliações + comentários)`
+- `escore_custo_beneficio`
+- `faixa_preco` (agrupamento por tercis)
+- `produto_destaque` (flag binária)
 
-avaliacao_ponderada: pondera a média conforme o volume de avaliações
+### 4. Modelagem Dimensional
+- **Modelo em estrela** com:
+  - Fato: `fato_avaliacoes_produto`
+  - Dimensões: `dim_produto`, `dim_marca`, `dim_categoria`, `dim_caracteristicas`, `dim_url`
 
-escore_engajamento: log1p(avaliações + comentários) → suaviza outliers
+### 5. Visualização Interativa
+- **Ferramenta**: `Power BI`
+- **Principais visões**:
+  - Análise por faixa de preço
+  - Marcas e categorias melhor/pior avaliadas
+  - Produtos mais engajados, comentados e avaliados
+  - Indicadores agregados por dimensão
 
-escore_custo_beneficio: avalia qualidade percebida em relação ao preço
+---
 
-faixa_preco: segmentação por tercis
+## 📊 Principais Métricas Criadas
 
-produto_destaque: flag para produtos com avaliação + engajamento acima da média
+| Métrica                   | Descrição                                                                 |
+|---------------------------|---------------------------------------------------------------------------|
+| `avaliacao_ponderada`     | Corrige distorções de produtos com poucas avaliações                     |
+| `escore_engajamento`      | Mede a interação real do público com cada produto                        |
+| `escore_custo_beneficio`  | Avalia qualidade percebida em relação ao preço                           |
+| `faixa_preco`             | Agrupamento por tercis para análise comparativa                          |
+| `produto_destaque`        | Flag binária para destacar produtos com boa percepção e interação        |
 
-4. Modelagem Dimensional
-Modelo em estrela com:
+---
 
-Tabela fato: fato_avaliacoes_produto
+## 📈 Insights Estratégicos
 
-Tabelas dimensão: dim_produto, dim_marca, dim_categoria, dim_caracteristicas, dim_url
+### 🐶 Produto com Maior Destaque: **Ração Premier**
+- Nota próxima de **5,0**
+- Alto volume de avaliações e comentários
+- Presente nos rankings de melhor avaliação, maior engajamento e mais comentado
 
-5. Visualização Interativa
-Ferramenta: Power BI
+**💡 Recomendação**: Usar como produto vitrine, em kits ou campanhas promocionais.
 
-Dashboard estratégico para uso da equipe de marketing com:
+---
 
-Análises por faixa de preço
+### 🏷️ Marca com Maior Destaque: **Premier**
+- Top 3 marcas mais bem avaliadas (~4,98)
+- Alta presença no portfólio e forte percepção de valor
+- Ticket médio intermediário-alto
 
-Marcas e categorias mais bem/mais mal avaliadas
+**💡 Recomendação**: Parcerias comerciais, destaque em campanhas e kits premium.
 
-Produtos com maior engajamento, avaliações e percepção de valor
+---
 
-Indicadores agregados por dimensão
+### 📦 Categorias com Potencial e Risco
 
-📊 Principais Métricas Criadas
-Métrica	Descrição
-avaliacao_ponderada	Corrige distorções de produtos com poucas avaliações
-escore_engajamento	Mede a interação real do público com cada produto
-escore_custo_beneficio	Combina percepção (avaliação) com preço, destacando bom custo-benefício
-faixa_preco	Agrupamento por tercis para análise comparativa
-produto_destaque	Flag binária para destacar produtos acima da média em avaliação e engajamento
+| Categoria        | Avaliação Alta | Engajamento | Ação Recomendada                                     |
+|------------------|----------------|-------------|------------------------------------------------------|
+| Ração, Sachês    | ✅             | ✅          | Investir em campanhas, usar como referência positiva |
+| Antipulgas       | ❌             | ❌          | Reavaliar mix, mensagens e portfólio                |
+| Escada Pet       | ✅             | ❌          | Justificar valor com comunicação de benefícios       |
 
-📈 Insights Estratégicos Gerados
-🔹 Produtos em Destaque
-Ração Premier: Nota próxima de 5,0, alto volume de feedbacks e excelente engajamento → Produto vitrine ideal.
+---
 
-Tapetes Higiênicos: Engajamento altíssimo e presença frequente entre os mais comentados.
+## 🧠 Soluções Entregues
 
-🔹 Marcas em Evidência
-Premier: Alta avaliação, alto volume e ticket médio premium → Parceria recomendada para campanhas.
+- Pipeline completo e escalável: **Coleta → Processamento → Enriquecimento → Visualização**
+- Modelo dimensional com métricas estratégicas
+- Dashboard com foco em **ações de marketing orientadas por dados**
+- Insights claros sobre percepção de **categorias, marcas e produtos**
 
-Golden e Nestlé Purina: Também entre as mais bem avaliadas com forte aceitação de mercado.
+---
 
-🔹 Categorias com potencial e riscos
-Ração, Sachês e Casinhas: Avaliações altas + engajamento → Investimento recomendado.
+## 🔄 Próximos Passos
 
-Antipulgas, Repelentes e Sabonetes: Avaliações abaixo da média e pouco engajamento → Reavaliação sugerida.
+- Aplicar **Análise de Sentimentos (NLP)** nos comentários para entender atributos qualitativos;
+- Explorar relações entre métricas compostas e comportamento do consumidor;
+- Evoluir para análises preditivas com base nas variáveis já criadas.
 
-🧠 Soluções Entregues
-Criação de um data mart analítico estruturado e escalável;
+---
 
-Desenvolvimento de um dashboard executivo com foco em marketing;
+## 📂 Sobre o Projeto
 
-Extração de insights estratégicos por produto, marca e categoria;
+- **Tipo**: Projeto autoral / portfólio de Engenharia e Análise de Dados
+- **Foco**: Estratégia de marketing orientada por dados em e-commerce
+- **Ferramentas**: Python, PySpark, Power BI
+- **Status**: Etapa 1 (quantitativa) concluída ✅ | Etapa 2 (qualitativa) em planejamento
 
-Geração de valor real para decisões de campanha, posicionamento e curadoria de portfólio.
+---
 
-🔄 Próximos Passos
-Aplicação de Análise de Sentimentos (NLP) nos comentários dos clientes para entender qualitativamente o que motiva avaliações positivas e negativas;
 
-Evolução para um modelo preditivo (ex: prever percepção com base em atributos).
-
-📂 Sobre o Projeto
-Status: Concluído – Etapa 1 (Análise Quantitativa)
-
-Fase atual: Preparação para Análise de Sentimentos
-
-Tipo: Projeto autoral (portfólio acadêmico)
-
-Tema: E-commerce, produtos pet, engenharia e análise de dados
