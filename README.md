@@ -29,6 +29,7 @@ A solução foi construir um **pipeline de dados completo**, capaz de transforma
   - Avaliação média
   - Número de avaliações e comentários
   - URL
+  - E outros para análises qualitativas posteriores
 
 ### 2. Processamento e Limpeza
 - **Tecnologia**: `PySpark`
