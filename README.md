@@ -1,71 +1,129 @@
-# PetLovers
-🚀 Apresento um projeto simulando uma colaboração com a PetLovers, um e-commerce (fictício) especializado em produtos para cães.
+🐾 Projeto PetLovers – Data Pipeline e Análise Estratégica de E-commerce Pet
+📌 Descrição Geral
+Este projeto simula uma parceria com a PetLovers, um e-commerce fictício especializado em produtos para cães, com o objetivo de resolver um problema clássico de marketing digital:
 
-A PetLovers enfrentava um desafio comum em empresas digitais: entender, de forma estruturada, como seus clientes percebem os produtos. Embora algumas categorias registrassem boas vendas, a equipe ainda não compreendia claramente os fatores que impulsionavam esse desempenho: preço, marca, qualidade percebida ou outros elementos?
+Como entender o que realmente influencia a percepção dos clientes sobre os produtos — preço, marca, categoria ou qualidade percebida?
 
-🧩 O principal problema identificado foi a falta de visibilidade consolidada sobre a opinião dos consumidores, o que limitava a atuação estratégica da equipe de marketing.
+A solução foi construir um pipeline de dados completo, capaz de transformar dados soltos (comentários, avaliações e características dos produtos) em informações acionáveis que orientem a equipe de marketing na tomada de decisões.
 
-💡 Neste projeto, construí um pipeline de dados completo — da extração (via web scraping) até o tratamento, enriquecimento e modelagem — com foco em transformar dados dispersos (como comentários, avaliações e características dos produtos) em insights acionáveis.
+🎯 Objetivos do Projeto
+Identificar produtos com maior potencial de destaque;
 
-A entrega final será um dashboard interativo, voltado para a equipe de marketing. Esse dashboard será uma ferramenta estratégica essencial para a equipe de marketing, transformando dados dispersos em decisões mais inteligentes e eficazes permitindo:
-Identificar produtos com alto potencial de destaque;
+Detectar pontos fortes e fracos em marcas e categorias;
 
-Detectar padrões de satisfação e insatisfação por marca e categoria;
+Relacionar percepção dos clientes com preço, volume de comentários e avaliações;
 
-Relacionar percepção do cliente com preço e volume de avaliações.
+Criar uma solução analítica escalável e reaproveitável.
 
-Entre outros.
+⚙️ Arquitetura do Pipeline
+1. Coleta de Dados (Web Scraping)
+Tecnologias: Selenium, Requests, BeautifulSoup
 
-🔍 Como transformar dados soltos em inteligência para decisões de marketing?
+Dados extraídos:
 
-📌 1. Coleta de Dados
- Utilizei técnicas de web scraping com Selenium, Requests e BeautifulSoup para extrair informações de produtos voltados para cães no site da PetLovers — incluindo preços, avaliações, comentários e descrições.
+Nome e descrição do produto
 
-🧹 2. Processamento e Limpeza
- Com PySpark, realizei a padronização dos dados e tratamento de inconsistências. Essa etapa foi crucial para garantir a integridade da análise.
+Preço
 
-🔬 3. Enriquecimento de Dados
- Criei novas variáveis derivadas e features úteis para análise — como média ponderada de avaliações e classificação de produtos por desempenho — documentadas em um book de variáveis.
+Categoria
 
-📦 4. Armazenamento Final
- Adotei uma estrutura em camadas para organização dos dados:
+Marca
 
-Raw (dados brutos),
-Processed (dados limpos e organizados),
-Curated (dados prontos para análise).
+Avaliação média
 
-📊 5. Visualização e Análise
+Número de avaliações e comentários
 
- O pipeline termina em um dashboard interativo no Power BI, desenhado para oferecer à equipe de marketing uma visão estratégica com insights sobre:
+URL
 
-Produtos com alto potencial de destaque;
+2. Processamento e Limpeza
+Tecnologia: PySpark (processamento distribuído)
 
-Marcas e categorias com maior (ou menor) satisfação;
+Etapas:
 
-A relação entre preço, avaliações e percepção dos clientes.
+Padronização de textos
 
-Essa estrutura permite à PetLovers transformar dados desconectados em ações orientadas por evidências.
+Conversão de tipos
 
-🔎 Como coletei os dados para transformar opiniões soltas em inteligência de marketing?
+Remoção de inconsistências
 
-O desafio era obter dados detalhados de diversos produtos – incluindo preços, marcas, avaliações, comentários e percepções específicas dos consumidores – de forma automatizada, confiável e escalável.
+Tratamento de nulos e duplicados
 
-💻 Para isso, construí um processo robusto de web scraping, utilizando:
+3. Feature Engineering
+Variáveis derivadas criadas para enriquecer a análise:
 
-📌 Selenium + BeautifulSoup + Requests
+avaliacao_ponderada: pondera a média conforme o volume de avaliações
 
-Combinando essas três ferramentas, consegui navegar por múltiplas páginas do site, simular interações (como rolagem e cliques), capturar dados estruturados e não estruturados e tratar variações na resposta das páginas.
+escore_engajamento: log1p(avaliações + comentários) → suaviza outliers
 
-📂 O scraping resultou em quatro conjuntos de dados principais:
+escore_custo_beneficio: avalia qualidade percebida em relação ao preço
 
-Informações gerais dos produtos (nome, categoria, marca, preço, nota média, etc.).
+faixa_preco: segmentação por tercis
 
-Comentários dos clientes, capturados até mesmo dentro de modais e iframes dinâmicos.
+produto_destaque: flag para produtos com avaliação + engajamento acima da média
 
-Avaliação por características (ex: durabilidade, custo-benefício).
+4. Modelagem Dimensional
+Modelo em estrela com:
 
-URLs que não responderam — registradas para controle de qualidade e tentativa futura.
+Tabela fato: fato_avaliacoes_produto
 
-⚠️ Além disso, adicionei controle de fluxo para evitar bloqueios por excesso de requisições, com pausas estratégicas a cada 100 produtos extraídos.
+Tabelas dimensão: dim_produto, dim_marca, dim_categoria, dim_caracteristicas, dim_url
 
-Essa etapa é fundamental: sem dados confiáveis, não há análise relevante. Todo o pipeline posterior (limpeza, enriquecimento, visualização) depende de uma coleta bem feita — e, nesse caso, o foco foi garantir profundidade, diversidade e precisão dos dados extraídos.
+5. Visualização Interativa
+Ferramenta: Power BI
+
+Dashboard estratégico para uso da equipe de marketing com:
+
+Análises por faixa de preço
+
+Marcas e categorias mais bem/mais mal avaliadas
+
+Produtos com maior engajamento, avaliações e percepção de valor
+
+Indicadores agregados por dimensão
+
+📊 Principais Métricas Criadas
+Métrica	Descrição
+avaliacao_ponderada	Corrige distorções de produtos com poucas avaliações
+escore_engajamento	Mede a interação real do público com cada produto
+escore_custo_beneficio	Combina percepção (avaliação) com preço, destacando bom custo-benefício
+faixa_preco	Agrupamento por tercis para análise comparativa
+produto_destaque	Flag binária para destacar produtos acima da média em avaliação e engajamento
+
+📈 Insights Estratégicos Gerados
+🔹 Produtos em Destaque
+Ração Premier: Nota próxima de 5,0, alto volume de feedbacks e excelente engajamento → Produto vitrine ideal.
+
+Tapetes Higiênicos: Engajamento altíssimo e presença frequente entre os mais comentados.
+
+🔹 Marcas em Evidência
+Premier: Alta avaliação, alto volume e ticket médio premium → Parceria recomendada para campanhas.
+
+Golden e Nestlé Purina: Também entre as mais bem avaliadas com forte aceitação de mercado.
+
+🔹 Categorias com potencial e riscos
+Ração, Sachês e Casinhas: Avaliações altas + engajamento → Investimento recomendado.
+
+Antipulgas, Repelentes e Sabonetes: Avaliações abaixo da média e pouco engajamento → Reavaliação sugerida.
+
+🧠 Soluções Entregues
+Criação de um data mart analítico estruturado e escalável;
+
+Desenvolvimento de um dashboard executivo com foco em marketing;
+
+Extração de insights estratégicos por produto, marca e categoria;
+
+Geração de valor real para decisões de campanha, posicionamento e curadoria de portfólio.
+
+🔄 Próximos Passos
+Aplicação de Análise de Sentimentos (NLP) nos comentários dos clientes para entender qualitativamente o que motiva avaliações positivas e negativas;
+
+Evolução para um modelo preditivo (ex: prever percepção com base em atributos).
+
+📂 Sobre o Projeto
+Status: Concluído – Etapa 1 (Análise Quantitativa)
+
+Fase atual: Preparação para Análise de Sentimentos
+
+Tipo: Projeto autoral (portfólio acadêmico)
+
+Tema: E-commerce, produtos pet, engenharia e análise de dados
