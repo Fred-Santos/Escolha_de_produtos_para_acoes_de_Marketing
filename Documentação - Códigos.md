@@ -152,7 +152,7 @@ pd.DataFrame(nao_capturado).to_csv('urls_faltantes.csv', sep=';')
 
 ---
 
-## ✅ Sugestões de Refatoração
+## ✅ Futuras ações
 
 - Modularizar cada etapa (coleta de links, coleta de dados, coleta de comentários)
 - Centralizar controle de exceções e log
@@ -811,3 +811,46 @@ Armazena todas as tabelas geradas no formato `.parquet`.
 ## ✅ Resultado Final
 
 Estrutura final em modelo estrela, pronta para análise em ferramentas de BI ou exploração com SparkSQL.
+📄 Documentação Análise de Sentimentos com BERT e SpaCy
+🎯 Objetivo
+Este notebook realiza a análise de sentimentos de comentários em português utilizando o modelo BERT multilíngue e o modelo linguístico do SpaCy para extração de adjetivos. O objetivo é classificar os sentimentos dos comentários, identificar palavras-chave e gerar um dataset enriquecido para análises qualitativas.
+
+📦 Importações e Upload dos Dados
+
+Realiza o upload e concatenação de múltiplos arquivos .parquet contendo comentários.
+
+🧱 Estrutura Inicial dos Dados
+
+Visualização e verificação da estrutura dos dados carregados.
+
+🛠️ Instalação de Dependências
+
+Instala os pacotes necessários para análise de sentimentos e processamento de linguagem natural.
+
+📚 Carregamento de Modelos
+
+Inicializa os modelos de NLP para análise de sentimentos e extração de adjetivos.
+
+🧠 Funções de Processamento
+Análise de Sentimento
+
+Classifica o sentimento do comentário com base na escala de estrelas do modelo BERT.
+
+Extração de Adjetivo Principal
+
+Extrai o primeiro adjetivo do comentário como palavra-chave representativa.
+
+Classificação do Adjetivo
+
+Classifica o sentimento da palavra-chave extraída.
+
+🧪 Aplicação das Funções
+
+Aplica as funções de análise de sentimentos e extração de palavras-chave ao DataFrame.
+
+💾 Escrita e Download do Resultado
+
+Salva o resultado final em formato .parquet e disponibiliza para download.
+
+✅ Resultado Final
+Dataset enriquecido com colunas de sentimento geral, palavra-chave extraída e percepção da palavra, pronto para análises qualitativas, dashboards ou integração com pipelines de NLP.
