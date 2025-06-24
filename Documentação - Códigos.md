@@ -152,17 +152,6 @@ pd.DataFrame(nao_capturado).to_csv('urls_faltantes.csv', sep=';')
 
 ---
 
-## ✅ Futuras ações
-
-- Modularizar cada etapa (coleta de links, coleta de dados, coleta de comentários)
-- Centralizar controle de exceções e log
-- Criar arquivos `.py` separados para scraping e processamento
-- Parametrizar caminho do driver e URL de origem
-- Adicionar `try/except` com tipos de exceção específicas
-- Otimizar checagem de “Marca” com regex
-
----
-
 ## 🧪 Testes e Validação
 
 - Testado com dezenas de produtos da categoria PET
@@ -638,6 +627,8 @@ Escreve os dados tratados no formato Parquet para uso futuro.
 
 O dataset `df3` foi padronizado, limpo e enriquecido com identificadores únicos. Isso permite sua integração com outras tabelas e análise em modelos como o modelo estrela.
 
+---
+
 # 📄 Documentação Construção do Modelo Estrela
 
 ## 🎯 Objetivo
@@ -807,6 +798,135 @@ dim_categoria.write.parquet(".../dim_categoria")
 Armazena todas as tabelas geradas no formato `.parquet`.
 
 ---
+# 🧾 Documentação Técnica - Análise de Sentimentos
+
+Esta seção complementa o pipeline de engenharia de dados ao aplicar **análise de sentimentos** nos comentários de produtos utilizando modelos de linguagem treinados em português (SpaCy) e um modelo multilíngue BERT (`nlptown/bert-base-multilingual-uncased-sentiment`). Este código foi executado em um notebook Google Colab
+
+---
+
+## 🧪 Objetivo
+
+Avaliar os sentimentos expressos nos comentários coletados do Mercado Livre, classificando-os como **positivo**, **neutro** ou **negativo**, e associar adjetivos relevantes a percepções específicas.
+
+---
+
+## 🛠️ Requisitos
+
+Instale os seguintes pacotes:
+
+```bash
+pip install -q transformers
+pip install -q spacy
+python -m spacy download pt_core_news_sm
+```
+
+---
+
+## 📥 Leitura dos Comentários
+
+```python
+from google.colab import files
+import pandas as pd
+
+uploaded = files.upload()
+
+dfs = []
+for file_name in uploaded.keys():
+    df_temp = pd.read_parquet(file_name)
+    dfs.append(df_temp)
+
+df = pd.concat(dfs, ignore_index=True)
+```
+
+---
+
+## 🔌 Carregamento de Modelos
+
+```python
+import spacy
+from transformers import pipeline
+
+nlp = spacy.load("pt_core_news_sm")
+classifier = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
+```
+
+---
+
+## 🧠 Funções de Processamento
+
+```python
+def analisar_sentimento(texto):
+    try:
+        resultado = classifier(texto[:512])[0]
+        estrelas = int(resultado['label'][0])
+        if estrelas <= 2:
+            return "negativo"
+        elif estrelas == 3:
+            return "neutro"
+        else:
+            return "positivo"
+    except:
+        return "erro"
+
+def extrair_adjetivo_principal(texto):
+    doc = nlp(texto.lower())
+    adjetivos = [token for token in doc if token.pos_ == "ADJ"]
+    return adjetivos[0].lemma_ if adjetivos else None
+
+def classificar_sentimento(palavra):
+    if not palavra:
+        return "neutro"
+    try:
+        resultado = classifier(palavra[:512])[0]
+        estrelas = int(resultado['label'][0])
+        if estrelas <= 2:
+            return "negativo"
+        elif estrelas == 3:
+            return "neutro"
+        else:
+            return "positivo"
+    except:
+        return "neutro"
+```
+
+---
+
+## 🧾 Aplicação ao DataFrame
+
+```python
+df["sentimento"] = df["Comentarios"].astype(str).apply(analisar_sentimento)
+df["Palavra_Chave"] = df["Comentarios"].astype(str).apply(extrair_adjetivo_principal)
+df["percepcao"] = df["Palavra_Chave"].apply(classificar_sentimento)
+
+df.to_parquet("sentimentos.parquet", index=False)
+files.download("sentimentos.parquet")
+```
+
+---
+
+## 📈 Resultado
+
+O novo dataset `sentimentos.parquet` contém as seguintes colunas adicionais:
+
+- `sentimento`: Classificação geral do comentário (positivo, neutro, negativo)
+- `Palavra_Chave`: Adjetivo principal extraído do comentário
+- `percepcao`: Sentimento inferido da palavra-chave
+
+---
+
+## 🔁 Integração com o Pipeline
+
+Este passo pode ser executado após o tratamento do `df2.csv`, utilizando o resultado de `Comentarios` como entrada. Ele complementa a modelagem de dados no modelo estrela como uma possível nova **tabela fato de sentimento** ou coluna nas dimensões já existentes.
+
+---
+
+## ✅ Possíveis Expansões Futuras
+
+- Análise temporal de sentimentos
+- Dashboard interativo com evolução de percepções
+
+---
+
 
 ## ✅ Resultado Final
 
