@@ -1,133 +1,112 @@
-# 🐾 Projeto PetLovers – Data Pipeline e Análise Estratégica de E-commerce Pet  
+# 🐾 Projeto PetLovers – NLP e Dados Reais para Decisões Estratégicas
 
-## 📌 Descrição Geral  
-Este projeto simula uma parceria com a **PetLovers**, um e-commerce fictício especializado em produtos para cães, com o objetivo de resolver um problema clássico de marketing digital:
+Este projeto é um case fictício baseado em dados reais coletados do Mercado Livre, simulando o cenário de um e-commerce do nicho pet. O objetivo foi aplicar técnicas de Engenharia de Dados e NLP (Processamento de Linguagem Natural) para apoiar a equipe de marketing na tomada de decisões baseadas em dados.
 
-> **"Como entender o que realmente influencia a percepção dos clientes sobre os produtos — preço, marca, categoria ou qualidade percebida?"**
-
-A solução foi construir um **pipeline de dados completo**, capaz de transformar dados soltos (comentários, avaliações e características dos produtos) em **informações acionáveis** que orientem a equipe de marketing na tomada de decisões.
+🔗 **Artigo completo no LinkedIn:** [Leia aqui](https://www.linkedin.com/pulse/case-pr%C3%A1tico-projeto-petlovers-dados-reais-nlp-para-frederico-qqmef/?trackingId=ssS3jt0f2iih31xfGgcrfQ%3D%3D)&#x20;
 
 ---
 
-## 🎯 Objetivos do Projeto
-- Identificar **produtos com maior potencial de destaque**;
-- Detectar **pontos fortes e fracos** em marcas e categorias;
-- Relacionar percepção dos clientes com **preço, volume de comentários e avaliações**;
-- Criar uma solução analítica escalável e reaproveitável.
+## 🚀 Visão Geral do Projeto
+
+**Problema:**\
+Como orientar decisões de marketing em um e-commerce pet com base na percepção dos clientes?
+
+**Solução:**\
+Análise de avaliações e comentários dos clientes para:
+
+- Identificar produtos com alto potencial de venda
+- Propor kits e promoções
+- Sugerir retirada de itens com baixa performance
+- Detectar sentimentos predominantes por categoria
+- Mapear palavras-chave mais mencionadas
 
 ---
 
-## ⚙️ Arquitetura do Pipeline
+## 🔄 Pipeline do Projeto
 
-### 1. Coleta de Dados (Web Scraping)
-- **Tecnologias**: `Selenium`, `Requests`, `BeautifulSoup`
-- **Dados extraídos**:
-  - Nome e descrição do produto
-  - Preço
-  - Categoria
-  - Marca
-  - Avaliação média
-  - Número de avaliações e comentários
-  - URL
-  - E outros para análises qualitativas posteriores
-
-### 2. Processamento e Limpeza
-- **Tecnologia**: `PySpark`
-- **Tratamentos aplicados**:
-  - Padronização de textos
-  - Conversão de tipos
-  - Remoção de inconsistências
-  - Tratamento de nulos e duplicados
-
-### 3. Feature Engineering
-Variáveis derivadas criadas para enriquecer a análise:
-- `avaliacao_ponderada`
-- `escore_engajamento = log1p(avaliações + comentários)`
-- `escore_custo_beneficio`
-- `faixa_preco` (agrupamento por tercis)
-- `produto_destaque` (flag binária)
-
-### 4. Modelagem Dimensional
-- **Modelo em estrela** com:
-  - Fato: `fato_avaliacoes_produto`
-  - Dimensões: `dim_produto`, `dim_marca`, `dim_categoria`, `dim_caracteristicas`, `dim_url`
-
-### 5. Visualização Interativa
-- **Ferramenta**: `Power BI`
-- **Principais visões**:
-  - Análise por faixa de preço
-  - Marcas e categorias melhor/pior avaliadas
-  - Produtos mais engajados, comentados e avaliados
-  - Indicadores agregados por dimensão
+```mermaid
+graph TD
+A[Web Scraping] --> B[Limpeza e Tratamento com PySpark]
+B --> C[NLP e Análise de Sentimentos]
+C --> D[Modelagem Estrela + Métricas Derivadas]
+D --> E[Dashboard Power BI com Insights]
+```
 
 ---
 
-## 📊 Principais Métricas Criadas
+## 🛠️ Tecnologias e Ferramentas
 
-| Métrica                   | Descrição                                                                 |
-|---------------------------|---------------------------------------------------------------------------|
-| `avaliacao_ponderada`     | Corrige distorções de produtos com poucas avaliações                     |
-| `escore_engajamento`      | Mede a interação real do público com cada produto                        |
-| `escore_custo_beneficio`  | Avalia qualidade percebida em relação ao preço                           |
-| `faixa_preco`             | Agrupamento por tercis para análise comparativa                          |
-| `produto_destaque`        | Flag binária para destacar produtos com boa percepção e interação        |
-
----
-
-## 📈 Insights Estratégicos
-
-### 🐶 Produto com Maior Destaque: **Ração Premier**
-- Nota próxima de **5,0**
-- Alto volume de avaliações e comentários
-- Presente nos rankings de melhor avaliação, maior engajamento e mais comentado
-
-**💡 Recomendação**: Usar como produto vitrine, em kits ou campanhas promocionais.
+| Etapa                  | Ferramentas/Tecnologias            |
+| ---------------------- | ---------------------------------- |
+| **Coleta de Dados**    | Selenium, Requests, BeautifulSoup  |
+| **Tratamento**         | PySpark, Spark SQL                 |
+| **NLP/Text Mining**    | Transformers (HuggingFace), SpaCy  |
+| **Modelagem de Dados** | Modelo Estrela, Métricas derivadas |
+| **Visualização**       | Power BI                           |
 
 ---
 
-### 🏷️ Marca com Maior Destaque: **Premier**
-- Top 3 marcas mais bem avaliadas (~4,98)
-- Alta presença no portfólio e forte percepção de valor
-- Ticket médio intermediário-alto
+## 📁 Estrutura do Projeto
 
-**💡 Recomendação**: Parcerias comerciais, destaque em campanhas e kits premium.
-
----
-
-### 📦 Categorias com Potencial e Risco
-
-| Categoria        | Avaliação Alta | Engajamento | Ação Recomendada                                     |
-|------------------|----------------|-------------|------------------------------------------------------|
-| Ração, Sachês    | ✅             | ✅          | Investir em campanhas, usar como referência positiva |
-| Antipulgas       | ❌             | ❌          | Reavaliar mix, mensagens e portfólio                |
-| Escada Pet       | ✅             | ❌          | Justificar valor com comunicação de benefícios       |
+```
+PetLovers/
+├── data/               # Dados brutos e tratados
+├── notebooks/          # Exploração inicial e testes
+├── src/                # Scripts principais do pipeline
+│   ├── scraping/       # Web scraping com Selenium
+│   ├── processing/     # Limpeza e transformação com PySpark
+│   └── nlp/            # Análise de sentimentos e palavras-chave
+├── dashboard/          # Arquivo .pbix do Power BI
+├── requirements.txt
+└── README.md
+```
 
 ---
 
-## 🧠 Soluções Entregues
+## 📊 Resultados e Insights
 
-- Pipeline completo e escalável: **Coleta → Processamento → Enriquecimento → Visualização**
-- Modelo dimensional com métricas estratégicas
-- Dashboard com foco em **ações de marketing orientadas por dados**
-- Insights claros sobre percepção de **categorias, marcas e produtos**
+- Coleta automatizada de produtos do segmento pet no Mercado Livre
+- Análise de sentimentos em comentários reais
+- Métricas derivadas: avaliação ponderada, escore de engajamento e custo-benefício
+- Dashboard com filtros por marca, categoria e sentimento
 
----
-
-## 🔄 Próximos Passos
-
-- Aplicar **Análise de Sentimentos (NLP)** nos comentários para entender atributos qualitativos;
-- Explorar relações entre métricas compostas e comportamento do consumidor;
-- Evoluir para análises preditivas com base nas variáveis já criadas.
-
----
-
-## 📂 Sobre o Projeto
-
-- **Tipo**: Projeto autoral / portfólio de Engenharia e Análise de Dados
-- **Foco**: Estratégia de marketing orientada por dados em e-commerce
-- **Ferramentas**: Python, PySpark, Power BI
-- **Status**: Etapa 1 (quantitativa) concluída ✅ | Etapa 2 (qualitativa) em planejamento
+> O resultado final permite à equipe de marketing:
+>
+> - Identificar produtos com alto potencial de venda
+> - Avaliar percepção de marca por categoria
+> - Criar kits estratégicos e ações promocionais
+> - Decidir pela retirada de itens com baixa aceitação
 
 ---
 
+## 📚 Aprendizados e Desafios
+
+- Refino do layout visual no Power BI com foco em tomada de decisão
+- Aplicação prática de NLP em dados não estruturados
+- Modularização de código para automação futura
+- Entendimento do valor estratégico de dados reais
+
+---
+
+## 🔮 Próximos Passos
+
+- Automatizar a coleta com **Airflow**
+- Validar continuamente os dados coletados
+- Criar séries temporais de sentimentos e engajamento
+
+---
+
+## 📘 Artigo Completo
+
+Para mais detalhes, metodologia e storytelling do projeto, acesse:
+
+➡️ [📄 Case Prático no LinkedIn – Projeto PetLovers](https://www.linkedin.com/pulse/case-pr%C3%A1tico-projeto-petlovers-dados-reais-nlp-para-frederico-qqmef/?trackingId=ssS3jt0f2iih31xfGgcrfQ%3D%3D)&#x20;
+
+---
+
+## 👨‍💻 Autor
+
+**Frederico da Costa dos Santos**\
+Engenheiro de Dados | NLP | PySpark | Power BI\
+🔗 [LinkedIn](https://www.linkedin.com/in/frederico-da-costa-dos-santos/)
 
