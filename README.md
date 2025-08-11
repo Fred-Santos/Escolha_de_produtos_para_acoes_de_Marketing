@@ -1,4 +1,5 @@
-# 🐾 Projeto PetLovers – NLP e Dados Reais para Decisões Estratégicas
+# Escolha de produtos para ações de Marketing baseado em NLP e Análise de desempenho
+# 🐾 Projeto PetLovers
 
 Este projeto é um case fictício baseado em dados reais coletados do Mercado Livre, simulando o cenário de um e-commerce do nicho pet. O objetivo foi aplicar técnicas de Engenharia de Dados e NLP (Processamento de Linguagem Natural) para apoiar a equipe de marketing na tomada de decisões baseadas em dados.
 
